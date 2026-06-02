@@ -1,37 +1,40 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
-import "./globals.css";
+import "@/styles/globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin", "cyrillic-ext"],
   display: "swap",
 });
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-};
-
 export const metadata: Metadata = {
-  title: "Онлайн-магазин полезных товаров в Душанбе",
+  title: "ЛДЦ «Новара» — Лечебно-диагностический центр в Худжанде",
   description:
-    "Каталог полезных товаров для телефона, дома, кухни, красоты, детей и подарков с доставкой по Душанбе.",
+    "Лечебно-диагностический центр «Новара» в Худжанде, 27-й микрорайон. Диагностика, УЗИ, ЭКГ, рентген, лабораторные анализы. Запишитесь на приём онлайн.",
   keywords: [
-    "магазин Душанбе",
-    "онлайн магазин",
-    "товары для дома",
-    "аксессуары для телефона",
-    "доставка Душанбе",
-    "полезные товары",
+    "клиника Худжанд",
+    "медицина Таджикистан",
+    "ЛДЦ Новара",
+    "диагностика Худжанд",
+    "врачи Худжанд",
+    "27 микрорайон",
   ],
   openGraph: {
-    title: "Онлайн-магазин полезных товаров в Душанбе",
+    title: "ЛДЦ «Новара» — Лечебно-диагностический центр в Худжанде",
     description:
-      "Каталог полезных товаров для телефона, дома, кухни, красоты, детей и подарков с доставкой по Душанбе.",
-    type: "website",
+      "Профессиональная медицинская помощь, забота о каждом пациенте и современный подход к здоровью.",
     locale: "ru_RU",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
   },
 };
 
@@ -41,12 +44,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={jakarta.variable} suppressHydrationWarning>
-      <body className="min-h-screen antialiased">
-        {/* Предотвращает мигание темы при загрузке */}
+    <html lang="ru" className={`${jakarta.variable} h-full`} suppressHydrationWarning>
+      <body className="min-h-full antialiased text-foreground">
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);var l=localStorage.getItem("locale");if(l==="en"||l==="tj"||l==="ru")document.documentElement.lang=l;}catch(e){}})();`,
           }}
         />
         <AppProviders>{children}</AppProviders>

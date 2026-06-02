@@ -1,50 +1,57 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
+import { Icon } from "@/components/ui/Icon";
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-  const { t } = useLocale();
+  const { theme, toggleTheme, mounted } = useTheme();
+
+  if (!mounted) {
+    return (
+      <div
+        className="h-10 w-[4.5rem] rounded-full bg-foreground/5"
+        aria-hidden="true"
+      />
+    );
+  }
+
+  const isDark = theme === "dark";
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={theme === "light" ? t.theme.toDark : t.theme.toLight}
       className={cn(
-        "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg sm:h-10 sm:w-10 sm:rounded-xl",
-        "glass-card transition-all duration-300 hover:scale-105",
-        "text-foreground",
+        "relative flex h-10 w-[4.5rem] items-center rounded-full border border-card-border p-1 transition-all duration-500 focus-ring",
+        isDark
+          ? "border-card-border bg-[var(--navy)]"
+          : "border-primary/15 bg-primary/8"
       )}
+      aria-label={isDark ? "Включить светлую тему" : "Включить тёмную тему"}
     >
-      {theme === "light" ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="h-4 w-4 text-violet-600 sm:h-5 sm:w-5"
-          aria-hidden
+      <motion.div
+        className="absolute flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md dark:bg-[#1e293b]"
+        layout
+        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+        style={{ left: isDark ? "calc(100% - 2.25rem)" : "0.25rem" }}
+      >
+        <motion.div
+          key={theme}
+          initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+          animate={{ rotate: 0, opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
         >
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="h-4 w-4 text-amber-400 sm:h-5 sm:w-5"
-          aria-hidden
-        >
-          <circle cx="12" cy="12" r="5" />
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-        </svg>
-      )}
+          <Icon
+            name={isDark ? "moon" : "sun"}
+            className={cn(
+              "h-4 w-4",
+              isDark ? "text-primary" : "text-amber-500"
+            )}
+          />
+        </motion.div>
+      </motion.div>
     </button>
   );
 }

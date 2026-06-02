@@ -1,47 +1,90 @@
-export type CategoryId =
-  | "phone"
-  | "home"
-  | "kitchen"
-  | "beauty"
-  | "kids"
-  | "gifts";
+export type Theme = "light" | "dark";
 
-export type ProductBadge = "hit" | "new" | "popular";
-
-export interface Category {
-  id: CategoryId;
-  name: string;
-  description: string;
-  emoji: string;
-  productCount: number;
+export interface NavItem {
+  label: string;
+  href: string;
 }
 
-export interface ProductBase {
+export interface Service {
   id: string;
-  category: CategoryId;
-  price: number;
-  badge?: ProductBadge;
-  featured?: boolean;
-  emoji: string;
-}
-
-export interface Product extends ProductBase {
-  name: string;
-  categoryName: string;
+  title: string;
   description: string;
+  icon?: string;
+  image?: string;
+  badge?: string;
 }
 
-export type FilterCategory = CategoryId | "all";
+import type { DoctorSpecialtyKey } from "@/i18n/types";
 
-export interface ShopContacts {
+export interface Doctor {
+  id: string;
+  name: string;
+  specialtyKey: DoctorSpecialtyKey;
+  image: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  text: string;
+  rating: number;
+}
+
+export interface Stat {
+  id: string;
+  value: string;
+  label: string;
+}
+
+export interface Advantage {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  category: string;
+}
+
+export interface AboutCard {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface HeroFeature {
+  id: string;
+  title: string;
+  icon: string;
+}
+
+export interface ClinicInfo {
   name: string;
   tagline: string;
-  phone: string;
-  phoneDisplay: string;
-  whatsappNumber: string;
-  telegramUsername: string;
-  telegramUrl: string;
-  instagramUsername: string;
-  instagramUrl: string;
+  address: string;
   city: string;
+  phone: string;
+  email: string;
+  workingHours: string;
+  telegram: string;
+  description: string;
+}
+
+export interface AppointmentFormData {
+  name: string;
+  phone: string;
+  service: string;
+  message: string;
+}
+
+export interface AppointmentFormErrors {
+  name?: string;
+  phone?: string;
+  service?: string;
+  message?: string;
 }

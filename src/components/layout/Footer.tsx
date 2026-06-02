@@ -1,38 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { SHOP } from "@/constants/shop";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { clinicInfo } from "@/data/clinic";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Icon } from "@/components/ui/Icon";
 
 export function Footer() {
-  const { t, categories } = useLocale();
-  const year = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
+  const { messages } = useTranslation();
+  const f = messages.footer;
+  const clinic = messages.clinic;
+
+  const descriptionPreview =
+    clinic.description.length > 120
+      ? `${clinic.description.slice(0, 120)}...`
+      : clinic.description;
 
   return (
-    <footer className="border-t border-purple-500/10 bg-white/50 dark:bg-gray-950/50">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-2">
-            <Link href="#hero" className="text-2xl font-bold gradient-text">
-              {SHOP.name}
-            </Link>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-              {SHOP.tagline}. {t.footer.description}
+    <footer className="border-t border-card-border bg-foreground/[0.02] dark:bg-[#080e1a]">
+      <div className="container-custom section-padding !py-12">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <div className="mb-4 flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent-teal to-primary text-white">
+                <Icon name="cross" className="h-4 w-4" />
+              </span>
+              <span className="text-lg font-bold text-foreground dark:text-white">
+                {clinicInfo.name}
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed text-foreground/80 dark:text-white/75">
+              {descriptionPreview}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              {t.footer.categoriesTitle}
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground dark:text-white">
+              {f.navigation}
             </h3>
-            <ul className="mt-4 space-y-2">
-              {categories.map((cat) => (
-                <li key={cat.id}>
+            <ul className="space-y-2">
+              {messages.nav.slice(0, 5).map((item) => (
+                <li key={item.href}>
                   <Link
-                    href="#products"
-                    className="text-sm text-muted transition-colors hover:text-purple-600 dark:hover:text-purple-400"
+                    href={item.href}
+                    className="text-sm text-foreground/80 transition-colors hover:text-primary focus-ring rounded dark:text-white/80"
                   >
-                    {cat.name}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -40,45 +53,55 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              {t.footer.contactsTitle}
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground dark:text-white">
+              {f.contacts}
             </h3>
-            <ul className="mt-4 space-y-2 text-sm text-muted">
-              <li>{SHOP.city}</li>
-              <li>
+            <ul className="space-y-3 text-sm text-foreground/80 dark:text-white/75">
+              <li className="flex gap-2">
+                <Icon
+                  name="location"
+                  className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                />
+                <span>{clinic.address}</span>
+              </li>
+              <li className="flex gap-2">
+                <Icon name="phone" className="h-4 w-4 shrink-0 text-primary" />
                 <a
-                  href={`tel:${SHOP.phone}`}
-                  className="transition-colors hover:text-purple-600 dark:hover:text-purple-400"
+                  href={`tel:${clinicInfo.phone.replace(/\s/g, "")}`}
+                  className="hover:text-primary focus-ring rounded"
                 >
-                  {SHOP.phoneDisplay}
+                  {clinicInfo.phone}
                 </a>
               </li>
-              <li>
+              <li className="flex gap-2">
+                <Icon name="mail" className="h-4 w-4 shrink-0 text-primary" />
                 <a
-                  href={SHOP.telegramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-purple-600 dark:hover:text-purple-400"
+                  href={`mailto:${clinicInfo.email}`}
+                  className="hover:text-primary focus-ring rounded"
                 >
-                  Telegram
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SHOP.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-purple-600 dark:hover:text-purple-400"
-                >
-                  Instagram
+                  {clinicInfo.email}
                 </a>
               </li>
             </ul>
           </div>
+
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground dark:text-white">
+              {f.workingHours}
+            </h3>
+            <p className="text-sm text-foreground/80 dark:text-white/75">
+              {clinic.workingHours}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-12 border-t border-purple-500/10 pt-8 text-center text-sm text-muted">
-          © {year} {SHOP.name}. {t.footer.rights}
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-card-border pt-8 sm:flex-row">
+          <p className="text-sm text-foreground/70 dark:text-white/70">
+            © {currentYear} {clinicInfo.name}. {f.rights}
+          </p>
+          <p className="text-sm text-foreground/70 dark:text-white/70">
+            {clinic.city} · {f.cityLine}
+          </p>
         </div>
       </div>
     </footer>

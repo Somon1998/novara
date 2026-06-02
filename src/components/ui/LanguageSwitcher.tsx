@@ -1,38 +1,49 @@
 "use client";
 
-import { LOCALE_OPTIONS } from "@/i18n";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { cn } from "@/utils/cn";
+import { LOCALES, type Locale } from "@/i18n";
+import { useTranslation } from "@/hooks/useTranslation";
+import { cn } from "@/lib/cn";
+
+const localeCodes: Record<Locale, string> = {
+  ru: "RU",
+  en: "EN",
+  tj: "TJ",
+};
 
 export function LanguageSwitcher({ className }: { className?: string }) {
-  const { locale, setLocale, t } = useLocale();
+  const { locale, setLocale, messages } = useTranslation();
 
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center gap-0.5 rounded-lg glass-card p-0.5 sm:gap-1 sm:rounded-xl sm:p-1",
-        className,
+        "flex items-center rounded-full border border-card-border bg-card/80 p-1 backdrop-blur-sm",
+        className
       )}
       role="group"
-      aria-label={t.language.switchAria}
+      aria-label={messages.language.label}
     >
-      {LOCALE_OPTIONS.map((option) => (
-        <button
-          key={option.code}
-          type="button"
-          onClick={() => setLocale(option.code)}
-          className={cn(
-            "min-w-[1.75rem] rounded-md px-1.5 py-1 text-[10px] font-bold leading-none transition-all duration-300 sm:min-w-0 sm:rounded-lg sm:px-2.5 sm:py-1.5 sm:text-xs",
-            locale === option.code
-              ? "bg-gradient-to-r from-violet-600 to-pink-500 text-white shadow-md"
-              : "text-muted hover:text-foreground",
-          )}
-          aria-pressed={locale === option.code}
-          title={option.label}
-        >
-          {option.shortLabel}
-        </button>
-      ))}
+      {LOCALES.map((code) => {
+        const isActive = locale === code;
+
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => setLocale(code)}
+            className={cn(
+              "min-w-[2rem] rounded-full px-2 py-1 text-[0.6875rem] font-bold transition-all duration-300 focus-ring sm:min-w-[2.5rem] sm:px-3 sm:py-1.5 sm:text-xs",
+              isActive
+                ? "bg-primary text-white shadow-[0_2px_10px_rgba(53,187,245,0.3)]"
+                : "text-foreground/70 hover:text-primary dark:text-white/70 dark:hover:text-primary"
+            )}
+            aria-pressed={isActive}
+            aria-label={messages.language[code]}
+            title={messages.language[code]}
+          >
+            {localeCodes[code]}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -1,170 +1,96 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import Image from "next/image";
+import { useGsapHero } from "@/hooks/useGsapHero";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/Button";
-import { getWhatsAppUrl } from "@/utils/whatsapp";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { formatPrice } from "@/utils/formatPrice";
+import { Icon } from "@/components/ui/Icon";
 
 export function HeroSection() {
-  const { t, featuredProducts } = useLocale();
-  const sectionRef = useRef<HTMLElement>(null);
-  const floatingCards = featuredProducts.slice(0, 4);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from("[data-hero-title]", {
-        opacity: 0,
-        y: 60,
-        duration: 1,
-        ease: "power3.out",
-      });
-
-      gsap.from("[data-hero-subtitle]", {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        delay: 0.2,
-        ease: "power3.out",
-      });
-
-      gsap.from("[data-hero-buttons]", {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        delay: 0.4,
-        ease: "power3.out",
-      });
-
-      gsap.from("[data-hero-visual]", {
-        opacity: 0,
-        scale: 0.9,
-        duration: 1,
-        delay: 0.3,
-        ease: "power3.out",
-      });
-
-      gsap.to("[data-blob='1']", {
-        x: 30,
-        y: -20,
-        duration: 8,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to("[data-blob='2']", {
-        x: -25,
-        y: 25,
-        duration: 10,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to("[data-blob='3']", {
-        x: 20,
-        y: 15,
-        duration: 7,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
-  const priceLabels = { from: t.hero.priceFrom, currency: t.hero.currency };
+  const containerRef = useGsapHero();
+  const { messages } = useTranslation();
+  const t = messages.hero;
 
   return (
     <section
-      id="hero"
-      ref={sectionRef}
-      className="relative min-h-screen overflow-hidden pt-24 pb-20 sm:pt-28 lg:pt-32"
+      id="home"
+      ref={containerRef}
+      className="noise-overlay relative flex min-h-[100dvh] flex-col justify-center overflow-hidden gradient-bg pt-48 pb-[6.4rem] sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-20"
     >
       <div
-        data-blob="1"
-        className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-gradient-to-br from-violet-500/30 to-purple-500/20 blur-3xl"
-        aria-hidden
+        data-hero="glow"
+        data-hero-drift="true"
+        className="glow-orb animate-pulse-glow pointer-events-none absolute -left-40 top-10 h-[28rem] w-[28rem] rounded-full"
+        aria-hidden="true"
       />
       <div
-        data-blob="2"
-        className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-gradient-to-br from-pink-500/25 to-rose-500/15 blur-3xl"
-        aria-hidden
+        data-hero="glow"
+        data-hero-drift="true"
+        className="glow-orb-teal animate-pulse-glow pointer-events-none absolute -right-32 top-1/3 h-80 w-80 rounded-full"
+        style={{ animationDelay: "1.5s" }}
+        aria-hidden="true"
       />
       <div
-        data-blob="3"
-        className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/15 blur-3xl"
-        aria-hidden
+        data-hero="glow"
+        data-hero-drift="true"
+        className="glow-orb-accent pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full opacity-60"
+        aria-hidden="true"
       />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        <div className="max-w-xl">
-          <span className="mb-4 inline-block rounded-full bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-400">
-            {t.hero.badge}
-          </span>
+      <div
+        data-hero="mesh"
+        className="hero-mesh pointer-events-none absolute inset-0"
+        aria-hidden="true"
+      />
 
-          <h1
-            data-hero-title
-            className="text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl"
-          >
-            {t.hero.titleStart}{" "}
-            <span className="gradient-text">{t.hero.titleHighlight}</span>{" "}
-            {t.hero.titleEnd}
-          </h1>
+      <div className="container-custom relative z-10 px-5 sm:px-8 lg:px-10">
+        <div className="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+          <div className="w-full text-left lg:max-w-none">
+            <h1 className="hero-title">
+              <span data-hero="title-line">{t.titleLine1}</span>
+              <span data-hero="title-line" className="text-primary">
+                {t.titleLine2}
+              </span>
+            </h1>
 
-          <p
-            data-hero-subtitle
-            className="mt-6 text-lg leading-relaxed text-muted sm:text-xl"
-          >
-            {t.hero.subtitle}
-          </p>
+            <p data-hero="subtitle" className="hero-lead">
+              {t.subtitle}
+            </p>
 
-          <div data-hero-buttons className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <Button href="#products" variant="primary" size="lg">
-              {t.hero.ctaProducts}
-            </Button>
-            <Button
-              href={getWhatsAppUrl(t.hero.whatsAppGreeting)}
-              external
-              variant="secondary"
-              size="lg"
+            <div
+              data-hero="actions"
+              className="mt-6 flex flex-col gap-3 sm:mt-8 lg:mt-10 sm:flex-row sm:items-center sm:gap-4"
             >
-              {t.hero.ctaWhatsApp}
-            </Button>
-          </div>
-        </div>
-
-        <div
-          data-hero-visual
-          className="relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-lg"
-        >
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {floatingCards.map((product) => (
-              <div key={product.id} className="min-w-0">
-                <div className="glass-card flex h-full min-h-[168px] flex-col overflow-hidden rounded-3xl p-3 shadow-2xl shadow-purple-500/10 sm:min-h-[180px] sm:p-4">
-                  <div className="flex h-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 text-3xl dark:from-violet-950/50 dark:to-pink-950/50 sm:h-20 sm:text-4xl">
-                    {product.emoji}
-                  </div>
-                  <p className="mt-3 min-h-11 text-sm font-bold leading-snug text-foreground line-clamp-2">
-                    {product.name}
-                  </p>
-                  <p className="mt-auto pt-2 text-xs font-semibold text-purple-600 dark:text-purple-400">
-                    {formatPrice(product.price, priceLabels)}
-                  </p>
-                </div>
-              </div>
-            ))}
+              <Button href="#appointment" size="lg" className="w-full sm:w-auto">
+                {t.bookConsultation}
+                <Icon name="arrow" className="h-4 w-4" />
+              </Button>
+              <Button
+                href="#services"
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                {t.viewServices}
+              </Button>
+            </div>
           </div>
 
           <div
-            className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
-            aria-hidden
+            data-hero="image-wrap"
+            className="relative mx-auto -mt-3 w-full max-w-[26rem] sm:mt-0 sm:max-w-[28rem] lg:mx-0 lg:max-w-none lg:justify-self-end"
           >
-            <div className="h-48 w-48 rounded-full bg-gradient-to-br from-violet-500/20 to-pink-500/20 blur-3xl" />
+            <div className="hero-image-panel relative aspect-[734/596] w-full overflow-hidden rounded-[1.875rem] sm:rounded-[2rem]">
+              <Image
+                src="/images/hero-team.png"
+                alt={t.imageAlt}
+                fill
+                priority
+                quality={92}
+                className="object-cover object-[center_28%] sm:object-[center_35%] lg:object-center"
+                sizes="(max-width: 1024px) min(28rem, 90vw), 42vw"
+              />
+            </div>
           </div>
         </div>
       </div>

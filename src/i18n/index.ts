@@ -1,23 +1,24 @@
-import type { Locale } from "./types";
-import { en } from "./dictionaries/en";
-import { ru } from "./dictionaries/ru";
-import { tj } from "./dictionaries/tj";
-import type { Dictionary } from "./dictionaries/types";
+import type { Locale, Messages } from "@/i18n/types";
+import { en } from "@/i18n/locales/en";
+import { ru } from "@/i18n/locales/ru";
+import { tj } from "@/i18n/locales/tj";
 
-const dictionaries: Record<Locale, Dictionary> = { ru, en, tj };
+export const LOCALES: Locale[] = ["ru", "en", "tj"];
+export const DEFAULT_LOCALE: Locale = "ru";
+export const LOCALE_STORAGE_KEY = "locale";
 
-export function getDictionary(locale: Locale): Dictionary {
-  return dictionaries[locale];
+const messagesMap: Record<Locale, Messages> = {
+  ru,
+  en,
+  tj,
+};
+
+export function isLocale(value: string): value is Locale {
+  return LOCALES.includes(value as Locale);
 }
 
-export function interpolate(
-  template: string,
-  values: Record<string, string | number>,
-): string {
-  return template.replace(/\{(\w+)\}/g, (_, key: string) =>
-    String(values[key] ?? ""),
-  );
+export function getMessages(locale: Locale): Messages {
+  return messagesMap[locale];
 }
 
-export type { Locale, Dictionary };
-export { DEFAULT_LOCALE, LOCALE_OPTIONS, LOCALE_STORAGE_KEY, LOCALES, isLocale } from "./locales";
+export { type Locale, type Messages } from "@/i18n/types";
