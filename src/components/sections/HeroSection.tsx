@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/Button";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { formatPrice } from "@/utils/formatPrice";
-import { cn } from "@/utils/cn";
 
 export function HeroSection() {
   const { t, featuredProducts } = useLocale();
@@ -47,15 +46,6 @@ export function HeroSection() {
         duration: 1,
         delay: 0.3,
         ease: "power3.out",
-      });
-
-      gsap.to("[data-floating-card]", {
-        y: -12,
-        duration: 2.5,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: { each: 0.4, from: "random" },
       });
 
       gsap.to("[data-blob='1']", {
@@ -150,44 +140,32 @@ export function HeroSection() {
 
         <div
           data-hero-visual
-          className="relative mx-auto h-[420px] w-full max-w-lg sm:h-[480px]"
+          className="relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-lg"
         >
-          {floatingCards.map((product, i) => {
-            const positions = [
-              "left-0 top-8 sm:left-4",
-              "right-0 top-0 sm:right-4",
-              "bottom-16 left-4 sm:left-8",
-              "bottom-8 right-0 sm:right-8",
-            ];
-            return (
-              <div
-                key={product.id}
-                data-floating-card
-                className={cn(
-                  "absolute w-[160px] sm:w-[180px]",
-                  positions[i],
-                )}
-                style={{ zIndex: 4 - i }}
-              >
-                <div className="glass-card overflow-hidden rounded-3xl p-4 shadow-2xl shadow-purple-500/10">
-                  <div className="flex h-20 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 text-4xl dark:from-violet-950/50 dark:to-pink-950/50">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {floatingCards.map((product) => (
+              <div key={product.id} className="min-w-0">
+                <div className="glass-card flex h-full min-h-[168px] flex-col overflow-hidden rounded-3xl p-3 shadow-2xl shadow-purple-500/10 sm:min-h-[180px] sm:p-4">
+                  <div className="flex h-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 text-3xl dark:from-violet-950/50 dark:to-pink-950/50 sm:h-20 sm:text-4xl">
                     {product.emoji}
                   </div>
-                  <p className="mt-3 text-sm font-bold text-foreground line-clamp-2">
+                  <p className="mt-3 min-h-11 text-sm font-bold leading-snug text-foreground line-clamp-2">
                     {product.name}
                   </p>
-                  <p className="mt-1 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                  <p className="mt-auto pt-2 text-xs font-semibold text-purple-600 dark:text-purple-400">
                     {formatPrice(product.price, priceLabels)}
                   </p>
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
 
           <div
-            className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-violet-500/20 to-pink-500/20 blur-3xl"
+            className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
             aria-hidden
-          />
+          >
+            <div className="h-48 w-48 rounded-full bg-gradient-to-br from-violet-500/20 to-pink-500/20 blur-3xl" />
+          </div>
         </div>
       </div>
     </section>
